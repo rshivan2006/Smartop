@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>SmartOP</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial,sans-serif;
+    }
+
+    body{
+      background:#eef3f9;
+      padding:30px;
+      min-height:100vh;
+    }
+
+    .container{
+      max-width:1300px;
+      margin:auto;
+    }
+
+    .header{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .header h1{
+      font-size:42px;
+      color:#0d47a1;
+      margin-bottom:10px;
+    }
+
+    .header p{
+      color:#555;
+      font-size:18px;
+    }
+
+    .dashboard{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:25px;
+    }
+
+    .card{
+      background:white;
+      padding:25px;
+      border-radius:20px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .card h2{
+      color:#0d47a1;
+      margin-bottom:20px;
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      padding:14px;
+      margin-bottom:15px;
+      border:1px solid #ccc;
+      border-radius:10px;
+      font-size:16px;
+    }
+
+    textarea{
+      min-height:100px;
+      resize:none;
+    }
+
+    button{
+      border:none;
+      padding:14px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .register-btn{
+      background:#1565c0;
+      color:white;
+      width:100%;
+    }
+
+    .register-btn:hover{
+      background:#0d47a1;
+    }
+
+    .next-btn{
+      background:#00a86b;
+      color:white;
+      width:100%;
+      margin-top:15px;
+    }
+
+    .next-btn:hover{
+      background:#00895a;
+    }
+
+    .token-box{
+      margin-top:20px;
+      background:#e8f0fe;
+      padding:20px;
+      border-radius:15px;
+      text-align:center;
+      display:none;
+    }
+
+    .token-number{
+      font-size:45px;
+      color:#1565c0;
+      font-weight:bold;
+      margin-top:10px;
+    }
+
+    .serving-box{
+      background:#d7ffe7;
+      padding:20px;
+      border-radius:15px;
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .serving-box h3{
+      color:#00895a;
+      margin-bottom:10px;
+    }
+
+    .serving-token{
+      font-size:26px;
+      font-weight:bold;
+    }
+
+    .doctor-stats{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+      margin-bottom:20px;
+    }
+
+    .stat-card{
+      background:#f4f7fb;
+      padding:15px;
+      border-radius:15px;
+      text-align:center;
+      border:2px solid #dbe7ff;
+    }
+
+    .stat-card h3{
+      color:#1565c0;
+      margin-bottom:10px;
+    }
+
+    .stat-card p{
+      margin:6px 0;
+      font-size:15px;
+      color:#444;
+    }
+
+    ul{
+      list-style:none;
+      margin-top:20px;
+    }
+
+    li{
+      background:#f7f9fc;
+      padding:15px;
+      border-radius:15px;
+      margin-bottom:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-left:6px solid #1565c0;
+    }
+
+    .patient-details{
+      line-height:1.6;
+    }
+
+    .badge{
+      background:#1565c0;
+      color:white;
+      padding:8px 14px;
+      border-radius:20px;
+      font-size:14px;
+    }
+
+    .empty{
+      text-align:center;
+      color:#777;
+      margin-top:20px;
+      font-size:17px;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:40px;
+      color:#666;
+      font-size:15px;
+    }
+
+    @media(max-width:900px){
+
+      .dashboard{
+        grid-template-columns:1fr;
+      }
+
+      .doctor-stats{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+
+      <h1>🏥 SmartOP</h1>
+
+      <p>
+        Smart Queue Management System for Clinics & Small Hospitals
+      </p>
+
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+
+      <!-- REGISTRATION -->
+      <div class="card">
+
+        <h2>Patient Registration</h2>
+
+        <input
+          type="text"
+          id="patientName"
+          placeholder="Enter Patient Name"
+        >
+
+        <input
+          type="number"
+          id="patientAge"
+          placeholder="Enter Age"
+        >
+
+        <select id="doctorSelect">
+
+          <option value="">Select Doctor</option>
+
+          <option value="Dr. Arun">Dr. Arun</option>
+
+          <option value="Dr. Meera">Dr. Meera</option>
+
+          <option value="Dr. Rahul">Dr. Rahul</option>
+
+          <option value="Dr. Neha">Dr. Neha</option>
+
+        </select>
+
+        <textarea
+          id="healthProblem"
+          placeholder="Enter Health Problem / Symptoms"
+        ></textarea>
+
+        <button
+          class="register-btn"
+          onclick="registerPatient()"
+        >
+          Generate Token
+        </button>
+
+        <!-- TOKEN -->
+        <div
+          class="token-box"
+          id="tokenBox"
+        >
+
+          <h3>Your Token Number</h3>
+
+          <div
+            class="token-number"
+            id="tokenNumber"
+          >
+            T1
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- QUEUE -->
+      <div class="card">
+
+        <h2>Live Queue Dashboard</h2>
+
+        <!-- DOCTOR STATS -->
+        <div class="doctor-stats">
+
+          <div class="stat-card">
+
+            <h3>Dr. Arun</h3>
+
+            <p>
+              Total:
+              <span id="arunTotal">0</span>
+            </p>
+
+            <p>
+              Waiting:
+              <span id="arunWaiting">0</span>
+            </p>
+
+          </div>
+
+          <div class="stat-card">
+
+            <h3>Dr. Meera</h3>
+
+            <p>
+              Total:
+              <span id="meeraTotal">0</span>
+            </p>
+
+            <p>
+              Waiting:
+              <span id="meeraWaiting">0</span>
+            </p>
+
+          </div>
+
+          <div class="stat-card">
+
+            <h3>Dr. Rahul</h3>
+
+            <p>
+              Total:
+              <span id="rahulTotal">0</span>
+            </p>
+
+            <p>
+              Waiting:
+              <span id="rahulWaiting">0</span>
+            </p>
+
+          </div>
+
+          <div class="stat-card">
+
+            <h3>Dr. Neha</h3>
+
+            <p>
+              Total:
+              <span id="nehaTotal">0</span>
+            </p>
+
+            <p>
+              Waiting:
+              <span id="nehaWaiting">0</span>
+            </p>
+
+          </div>
+
+        </div>
+
+        <!-- CURRENT SERVING -->
+        <div class="serving-box">
+
+          <h3>Currently Serving</h3>
+
+          <div
+            class="serving-token"
+            id="currentServing"
+          >
+            No Patient
+          </div>
+
+        </div>
+
+        <button
+          class="next-btn"
+          onclick="callNextPatient()"
+        >
+          Call Next Patient
+        </button>
+
+        <!-- QUEUE LIST -->
+        <ul id="queueList"></ul>
+
+        <div
+          class="empty"
+          id="emptyText"
+        >
+          No patients in queue
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+
+      SmartOP © 2026 | Smart Digital Queue Management
+
+    </div>
+
+  </div>
+
+  <!-- INTERNAL JAVASCRIPT -->
+  <script>
+
+    // Queue Array
+    let queue = [];
+
+    // Token Counter
+    let tokenCounter = 1;
+
+    // Doctor Statistics
+    const doctorStats = {
+
+      "Dr. Arun": {
+        total: 0,
+        waiting: 0
+      },
+
+      "Dr. Meera": {
+        total: 0,
+        waiting: 0
+      },
+
+      "Dr. Rahul": {
+        total: 0,
+        waiting: 0
+      },
+
+      "Dr. Neha": {
+        total: 0,
+        waiting: 0
+      }
+
+    };
+
+    // Register Patient
+    function registerPatient(){
+
+      const name =
+        document.getElementById("patientName").value.trim();
+
+      const age =
+        document.getElementById("patientAge").value.trim();
+
+      const doctor =
+        document.getElementById("doctorSelect").value;
+
+      const healthProblem =
+        document.getElementById("healthProblem").value.trim();
+
+      // Validation
+      if(
+        name === "" ||
+        age === "" ||
+        doctor === "" ||
+        healthProblem === ""
+      ){
+
+        alert("Please fill all fields");
+
+        return;
+      }
+
+      // Generate Token
+      const token = "T" + tokenCounter;
+
+      tokenCounter++;
+
+      // Create Patient Object
+      const patient = {
+
+        token: token,
+
+        name: name,
+
+        age: age,
+
+        doctor: doctor,
+
+        healthProblem: healthProblem
+
+      };
+
+      // Add To Queue
+      queue.push(patient);
+
+      // Update Doctor Stats
+      doctorStats[doctor].total += 1;
+
+      doctorStats[doctor].waiting += 1;
+
+      // Show Token
+      document.getElementById("tokenBox").style.display =
+        "block";
+
+      document.getElementById("tokenNumber").innerText =
+        token;
+
+      // Clear Inputs
+      document.getElementById("patientName").value = "";
+
+      document.getElementById("patientAge").value = "";
+
+      document.getElementById("doctorSelect").value = "";
+
+      document.getElementById("healthProblem").value = "";
+
+      // Refresh UI
+      updateQueue();
+
+    }
+
+    // Update Queue
+    function updateQueue(){
+
+      const queueList =
+        document.getElementById("queueList");
+
+      const emptyText =
+        document.getElementById("emptyText");
+
+      // Clear Queue List
+      queueList.innerHTML = "";
+
+      // Show Empty Text
+      if(queue.length === 0){
+
+        emptyText.style.display = "block";
+
+      }
+      else{
+
+        emptyText.style.display = "none";
+
+      }
+
+      // Display Queue
+      queue.forEach((patient, index) => {
+
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+
+          <div class="patient-details">
+
+            <strong>${patient.token}</strong><br>
+
+            ${patient.name} (${patient.age})<br>
+
+            ${patient.doctor}<br>
+
+            <b>Problem:</b> ${patient.healthProblem}
+
+          </div>
+
+          <div class="badge">
+
+            Position ${index + 1}
+
+          </div>
+
+        `;
+
+        queueList.appendChild(li);
+
+      });
+
+      // Update Stats
+      document.getElementById("arunTotal").innerText =
+        doctorStats["Dr. Arun"].total;
+
+      document.getElementById("arunWaiting").innerText =
+        doctorStats["Dr. Arun"].waiting;
+
+      document.getElementById("meeraTotal").innerText =
+        doctorStats["Dr. Meera"].total;
+
+      document.getElementById("meeraWaiting").innerText =
+        doctorStats["Dr. Meera"].waiting;
+
+      document.getElementById("rahulTotal").innerText =
+        doctorStats["Dr. Rahul"].total;
+
+      document.getElementById("rahulWaiting").innerText =
+        doctorStats["Dr. Rahul"].waiting;
+
+      document.getElementById("nehaTotal").innerText =
+        doctorStats["Dr. Neha"].total;
+
+      document.getElementById("nehaWaiting").innerText =
+        doctorStats["Dr. Neha"].waiting;
+
+    }
+
+    // Call Next Patient
+    function callNextPatient(){
+
+      // Empty Queue Check
+      if(queue.length === 0){
+
+        alert("No patients in queue");
+
+        return;
+      }
+
+      // Remove First Patient
+      const currentPatient = queue.shift();
+
+      // Reduce Waiting Count
+      doctorStats[currentPatient.doctor].waiting -= 1;
+
+      // Show Current Serving
+      document.getElementById("currentServing").innerText =
+
+        currentPatient.token +
+
+        " - " +
+
+        currentPatient.name +
+
+        " (" +
+
+        currentPatient.doctor +
+
+        ")";
+
+      // Refresh Queue
+      updateQueue();
+
+    }
+
+    // Initial Update
+    updateQueue();
+
+  </script>
+
+</body>
+
+</html>
